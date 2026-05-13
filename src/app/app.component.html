@@ -1,0 +1,21 @@
+<ng-container *ngIf="currentUser$ | async as currentUser; else publicShell">
+  <ng-container *ngIf="!(isAuthPage$ | async); else publicShell">
+    <app-navbar></app-navbar>
+    <main class="app-shell">
+      <app-sidebar></app-sidebar>
+      <section class="app-content">
+        <router-outlet></router-outlet>
+      </section>
+    </main>
+  </ng-container>
+</ng-container>
+
+<ng-template #publicShell>
+  <router-outlet></router-outlet>
+</ng-template>
+
+<div class="toast-stack" aria-live="polite">
+  <button *ngFor="let item of toasts$ | async" class="toast" [class]="item.type" type="button" (click)="toast.dismiss(item.id)">
+    {{ item.message }}
+  </button>
+</div>

@@ -1,0 +1,104 @@
+<section class="page public-workspace">
+  <app-spinner *ngIf="loading()"></app-spinner>
+
+  <div class="not-found" *ngIf="!loading() && notFound()">
+    <h1>Workspace not available</h1>
+    <p>This workspace is private or does not exist.</p>
+  </div>
+
+  <ng-container *ngIf="!loading() && !notFound() && workspace() as ws">
+    <header class="page-header">
+      <div>
+        <div class="header-row">
+          <h1>{{ ws.name }}</h1>
+          <span class="public-badge">Public View</span>
+        </div>
+        <p>{{ ws.description || 'Public workspace — viewer access.' }}</p>
+        <div class="workspace-meta">
+          <span class="badge public">PUBLIC</span>
+          <span class="meta-item">{{ ws.memberCount || 0 }} member{{ (ws.memberCount || 0) !== 1 ? 's' : '' }}</span>
+          <span class="meta-item">{{ boards().length }} board{{ boards().length !== 1 ? 's' : '' }}</span>
+        </div>
+      </div>
+      <div class="readonly-hint" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2z"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <span>Read-only</span>
+      </div>
+    </header>
+
+    <p class="empty" *ngIf="!boards().length">No boards yet.</p>
+
+    <article class="public-board" *ngFor="let board of boards()">
+      <header class="board-header" [style.background]="board.background || '#0052cc'">
+        <h2>{{ board.name }}</h2>
+        <p *ngIf="board.description">{{ board.description }}</p>
+      </header>
+
+      <p class="empty muted" *ngIf="!board.lists.length">No lists in this board.</p>
+
+      <div class="lists-row" *ngIf="board.lists.length">
+        <section class="list-card" *ngFor="let list of board.lists">
+          <header class="list-header">
+            <span class="list-dot" [style.background]="list.color || '#0052cc'"></span>
+            <strong>{{ list.name }}</strong>
+            <span class="count">{{ list.cards.length }}</span>
+          </header>
+
+          <p class="empty-sm" *ngIf="!list.cards.length">No cards.</p>
+
+          <button class="task-card" type="button" *ngFor="let card of list.cards" (click)="openCard(card)">
+            <div class="task-cover" *ngIf="card.coverColor && card.coverColor !== '#ffffff'" [style.background]="card.coverColor"></div>
+            <strong>{{ card.title }}</strong>
+            <div class="task-meta">
+              <span class="status-chip">{{ statusLabel(card.status) }}</span>
+              <span class="status-chip priority" *ngIf="card.priority">{{ card.priority }}</span>
+            </div>
+          </button>
+        </section>
+      </div>
+    </article>
+  </ng-container>
+
+  <!-- Card preview modal -->
+  <div class="modal-backdrop" *ngIf="selectedCard() as card" (click)="closeCard()">
+    <article class="modal preview-modal" (click)="$event.stopPropagation()">
+      <header class="preview-header">
+        <h2>{{ card.title }}</h2>
+        <button type="button" class="close-btn" (click)="closeCard()" aria-label="Close">&times;</button>
+      </header>
+
+      <div class="preview-body">
+        <p class="muted" *ngIf="!card.description">No description provided.</p>
+        <p class="description" *ngIf="card.description">{{ card.description }}</p>
+
+        <div class="preview-meta">
+          <span class="status-chip">{{ statusLabel(card.status) }}</span>
+          <span class="status-chip priority" *ngIf="card.priority">{{ card.priority }}</span>
+          <span class="meta-item" *ngIf="card.dueDate">Due: {{ card.dueDate | date:'mediumDate' }}</span>
+        </div>
+
+        <section class="comments-section">
+          <h3>Comments</h3>
+          <p class="muted" *ngIf="loadingComments()">Loading comments…</p>
+          <p class="muted" *ngIf="!loadingComments() && !cardComments().length">No comments yet.</p>
+          <ul class="comment-list" *ngIf="!loadingComments() && cardComments().length">
+            <li *ngFor="let c of cardComments()">
+              <strong>{{ c.authorEmail || c.authorName || ('User #' + c.authorId) }}</strong>
+              <time>{{ c.createdAt | date:'short' }}</time>
+              <p>{{ c.content }}</p>
+            </li>
+          </ul>
+
+          <form [formGroup]="commentForm" (ngSubmit)="postComment()" class="comment-form">
+            <textarea formControlName="content" rows="3" placeholder="Add a comment…"></textarea>
+            <div class="modal-actions">
+              <button type="submit" class="primary" [disabled]="commentForm.invalid || postingComment()">
+                {{ postingComment() ? 'Posting…' : 'Post Comment' }}
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </article>
+  </div>
+</section>

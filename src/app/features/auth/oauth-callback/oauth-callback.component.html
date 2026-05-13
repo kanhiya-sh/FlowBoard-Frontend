@@ -1,0 +1,9 @@
+<main class="auth-page">
+  <section class="auth-card oauth-card">
+    <div class="brand">FlowBoard</div>
+    <h1>Signing you in</h1>
+    <p *ngIf="!error">Finishing Google authentication...</p>
+    <p class="error" *ngIf="error">{{ error }}</p>
+    <app-spinner *ngIf="!error" label="Completing sign in"></app-spinner>
+  </section>
+</main>
