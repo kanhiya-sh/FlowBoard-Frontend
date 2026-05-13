@@ -35,8 +35,11 @@ describe('AuthService', () => {
     expect(service.isAuthenticated()).toBeFalse();
   });
 
-  it('isAuthenticated() returns true when token exists', () => {
-    localStorage.setItem('flowboard_token', 'test-token');
+  it('isAuthenticated() returns true when valid (non-expired) JWT is stored', () => {
+    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+    const payload = btoa(JSON.stringify({ sub: 'a@b.com', exp: Math.floor(Date.now() / 1000) + 3600 }));
+    const fakeJwt = `${header}.${payload}.sig`;
+    localStorage.setItem('flowboard_token', fakeJwt);
     expect(service.isAuthenticated()).toBeTrue();
   });
 
