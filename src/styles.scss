@@ -1,0 +1,210 @@
+:root {
+  --primary: #0c66e4;
+  --primary-hover: #0055cc;
+  --primary-pressed: #09326c;
+  --primary-light: #e9f2ff;
+  --secondary: #172b4d;
+  --accent: #6e5dc6;
+  --teal: #1f9d8a;
+  --success: #1f845a;
+  --success-light: #dcfff1;
+  --warning: #f5a524;
+  --warning-light: #fff7d6;
+  --danger: #c9372c;
+  --danger-light: #ffeceb;
+  --bg-main: rgba(246, 249, 246, 0.86);
+  --bg-soft: rgba(239, 245, 239, 0.9);
+  --bg-card: rgba(255, 255, 255, 0.92);
+  --bg-glass: rgba(255, 255, 255, 0.76);
+  --bg-hover: #edf1f7;
+  --border: #d8dee9;
+  --border-strong: #bec7d5;
+  --border-focus: #579dff;
+  --text-primary: #172b4d;
+  --text-secondary: #42526e;
+  --text-muted: #6b778c;
+  --text-subtle: #97a0af;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --shadow-xs: 0 1px 1px rgba(9, 30, 66, 0.08);
+  --shadow-sm: 0 1px 2px rgba(9, 30, 66, 0.12), 0 0 0 1px rgba(9, 30, 66, 0.04);
+  --shadow-md: 0 8px 20px rgba(9, 30, 66, 0.12), 0 0 0 1px rgba(9, 30, 66, 0.04);
+  --shadow-lg: 0 18px 44px rgba(9, 30, 66, 0.16), 0 0 0 1px rgba(9, 30, 66, 0.05);
+  --shadow-xl: 0 28px 70px rgba(9, 30, 66, 0.22);
+  --shadow-overlay: 0 34px 90px rgba(9, 30, 66, 0.34);
+  --transition-fast: 150ms cubic-bezier(0.2, 0, 0, 1);
+  --transition-normal: 240ms cubic-bezier(0.2, 0, 0, 1);
+  --transition-smooth: 360ms cubic-bezier(0.16, 1, 0.3, 1);
+  --app-bg-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2400&q=80');
+  --app-overlay: rgba(246, 249, 246, 0.78);
+  --app-bg: transparent;
+  --nav-bg: rgba(255, 255, 255, 0.72);
+  --nav-text: #172b4d;
+  --nav-muted: #5e6c84;
+  --sidebar-bg: linear-gradient(180deg, rgba(23, 43, 77, 0.98), rgba(9, 30, 66, 0.98));
+}
+
+:root[data-theme='dark'] {
+  --primary: #579dff;
+  --primary-hover: #85b8ff;
+  --primary-pressed: #cce0ff;
+  --primary-light: rgba(87, 157, 255, 0.16);
+  --accent: #9f8fef;
+  --teal: #4bce97;
+  --success: #4bce97;
+  --success-light: rgba(75, 206, 151, 0.14);
+  --warning: #f5cd47;
+  --warning-light: rgba(245, 205, 71, 0.14);
+  --danger: #f87168;
+  --danger-light: rgba(248, 113, 104, 0.14);
+  --bg-main: rgba(15, 23, 42, 0.86);
+  --bg-soft: rgba(17, 31, 53, 0.9);
+  --bg-card: rgba(24, 34, 53, 0.92);
+  --bg-glass: rgba(24, 34, 53, 0.8);
+  --bg-hover: #223049;
+  --border: #2d3b53;
+  --border-strong: #43536e;
+  --border-focus: #85b8ff;
+  --text-primary: #eef4ff;
+  --text-secondary: #c7d2e5;
+  --text-muted: #9fb0c8;
+  --text-subtle: #74839a;
+  --shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.28);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  --shadow-md: 0 10px 26px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-xl: 0 30px 80px rgba(0, 0, 0, 0.48);
+  --shadow-overlay: 0 34px 90px rgba(0, 0, 0, 0.58);
+  --app-overlay: rgba(8, 13, 24, 0.76);
+  --app-bg: transparent;
+  --nav-text: #eef4ff;
+  --nav-muted: #9fb0c8;
+  --nav-bg: rgba(11, 18, 32, 0.84);
+  --sidebar-bg: linear-gradient(180deg, rgba(10, 20, 38, 0.98), rgba(8, 15, 28, 0.98));
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: #eef3ef var(--app-bg-image) center / cover fixed no-repeat;
+  color: var(--text-primary);
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  font-size: 14px;
+  transition: background var(--transition-normal), color var(--transition-normal);
+}
+
+body::before {
+  background: var(--app-overlay);
+  backdrop-filter: blur(16px) saturate(0.9);
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: fixed;
+  z-index: 0;
+}
+
+app-root {
+  display: block;
+  min-height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  letter-spacing: 0;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(107,119,140,0.35);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(107,119,140,0.55);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+.skeleton {
+  animation: shimmer 1.25s linear infinite;
+  background: linear-gradient(90deg, var(--bg-hover) 25%, var(--bg-soft) 37%, var(--bg-hover) 63%);
+  background-size: 220% 100%;
+  border-radius: var(--radius-md);
+}

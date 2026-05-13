@@ -1,0 +1,129 @@
+<section class="board-page" [style.--board-bg]="board()?.background || '#0052cc'">
+  <app-spinner *ngIf="loading()" label="Loading board"></app-spinner>
+  <ng-container *ngIf="!loading() && board() as boardData">
+    <header class="board-header">
+      <div class="board-info">
+        <h1>{{ boardData.name }}</h1>
+        <p *ngIf="boardData.description">{{ boardData.description }}</p>
+      </div>
+      <div class="board-actions">
+        <span class="board-pill">{{ lists().length }} lists</span>
+        <span class="board-pill">{{ getDropListIds().length ? 'Live board' : 'Empty board' }}</span>
+        <button type="button" class="board-pill board-pill-btn" (click)="toggleArchivedPanel()" [class.active]="archivedPanelOpen">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+          Archived
+        </button>
+      </div>
+    </header>
+
+    <div class="board-empty" *ngIf="!lists().length && !addListOpen">
+      <div class="board-empty-visual"></div>
+      <h2>This board is ready for its first list</h2>
+      <p>Create a list to start shaping work into cards.</p>
+      <button type="button" class="empty-create" (click)="addListOpen = true">Add a list</button>
+    </div>
+
+    <div class="lists" *ngIf="lists().length || addListOpen" cdkDropList cdkDropListOrientation="horizontal" [cdkDropListData]="lists()" (cdkDropListDropped)="onListDrop($event)">
+      <article class="list" *ngFor="let list of lists(); trackBy: trackList" cdkDrag [style.--list-accent]="list.color || '#0052cc'">
+        <div class="list-drag-handle" cdkDragHandle>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="8" cy="6" r="1.5"/><circle cx="16" cy="6" r="1.5"/><circle cx="8" cy="12" r="1.5"/><circle cx="16" cy="12" r="1.5"/><circle cx="8" cy="18" r="1.5"/><circle cx="16" cy="18" r="1.5"/></svg>
+        </div>
+        <header>
+          <input *ngIf="list.editing" #nameInput class="list-name-input" [value]="list.name" (blur)="saveListName(list, nameInput.value)" (keyup.enter)="nameInput.blur()">
+          <h2 *ngIf="!list.editing" (click)="list.editing = true">{{ list.name }}</h2>
+          <span class="card-count">{{ list.cards?.length || 0 }}</span>
+          <div class="list-menu-wrap">
+            <button class="list-menu-btn" type="button" (click)="list._menuOpen = !list._menuOpen">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+            <div class="list-menu" *ngIf="list._menuOpen">
+              <button type="button" (click)="list.editing = true; list._menuOpen = false">Rename</button>
+              <button type="button" (click)="archiveList(list); list._menuOpen = false">Archive</button>
+              <button type="button" class="menu-danger" (click)="deleteList(list); list._menuOpen = false">Delete</button>
+            </div>
+          </div>
+        </header>
+
+        <div class="cards"
+             cdkDropList
+             [id]="'list-' + list.listId"
+             [cdkDropListData]="list.cards || []"
+             [cdkDropListConnectedTo]="getDropListIds()"
+             (cdkDropListDropped)="onCardDrop($event, list)">
+          <button class="card" *ngFor="let card of list.cards; trackBy: trackCard" cdkDrag [cdkDragData]="card" (cdkDragStarted)="onDragStarted()" type="button" (click)="openCard(card)" [class.overdue]="isOverdue(card)">
+            <div class="card-cover" *ngIf="card.coverColor && card.coverColor !== '#ffffff' && card.coverColor !== '#fff'" [style.background]="card.coverColor"></div>
+            <div class="card-labels" *ngIf="card.labels?.length">
+              <span *ngFor="let label of card.labels" [style.background]="label.color" class="card-label">{{ label.name }}</span>
+            </div>
+            <strong class="card-title">{{ card.title }}</strong>
+            <div class="card-meta">
+              <span class="status-chip">{{ statusLabel(card.status) }}</span>
+              <span class="priority-dot" [class]="card.priority" [attr.title]="card.priority"></span>
+              <time *ngIf="card.dueDate" [class.overdue-date]="isOverdue(card)">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                {{ card.dueDate | date:'MMM d' }}
+              </time>
+              <span *ngIf="card.commentCount" class="meta-badge">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                {{ card.commentCount }}
+              </span>
+              <span *ngIf="card.checklistProgress" class="meta-badge">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                {{ card.checklistProgress.completed }}/{{ card.checklistProgress.total }}
+              </span>
+              <span *ngIf="card.assigneeId" class="mini-avatar">{{ card.assigneeId }}</span>
+            </div>
+          </button>
+          <div class="empty-list" *ngIf="!list.cards?.length">Drop cards here</div>
+        </div>
+
+        <form [formGroup]="ensureCardForm(list.listId)" (ngSubmit)="createCard(list)" class="add-card">
+          <input formControlName="title" placeholder="Add a card…">
+          <button type="submit" class="add-card-btn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </form>
+      </article>
+
+      <article class="add-list" *ngIf="!addListOpen">
+        <button type="button" class="add-list-btn" (click)="addListOpen = true">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add another list
+        </button>
+      </article>
+      <article class="add-list add-list-form" *ngIf="addListOpen">
+        <form [formGroup]="listForm" (ngSubmit)="createList()">
+          <input formControlName="name" placeholder="Enter list name…" autofocus>
+          <div class="add-list-actions">
+            <button type="submit" class="primary-sm">Add list</button>
+            <button type="button" class="close-btn" (click)="addListOpen = false">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </form>
+      </article>
+    </div>
+    <aside class="archived-panel" *ngIf="archivedPanelOpen">
+      <header class="archived-header">
+        <h2>Archived lists</h2>
+        <button type="button" class="close-btn" (click)="archivedPanelOpen = false" aria-label="Close archived panel">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </header>
+      <div class="archived-body">
+        <p class="archived-loading" *ngIf="archivedLoading()">Loading…</p>
+        <p class="archived-empty" *ngIf="!archivedLoading() && !archivedLists().length">No archived lists.</p>
+        <article class="archived-item" *ngFor="let list of archivedLists()" [style.--list-accent]="list.color || '#0052cc'">
+          <div class="archived-info">
+            <span class="archived-dot"></span>
+            <strong>{{ list.name }}</strong>
+          </div>
+          <div class="archived-actions">
+            <button type="button" class="archived-btn restore" (click)="unarchiveList(list)">Restore</button>
+            <button type="button" class="archived-btn danger" (click)="deleteArchivedList(list)">Delete</button>
+          </div>
+        </article>
+      </div>
+    </aside>
+  </ng-container>
+</section>

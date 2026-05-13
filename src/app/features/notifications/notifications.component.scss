@@ -1,0 +1,121 @@
+@use '../../shared/page-styles';
+
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notif-item {
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  gap: 14px;
+  padding: 16px 20px;
+  transition: background var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.notif-item:hover {
+  background: var(--bg-hover);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.notif-item.unread {
+  background: linear-gradient(180deg, rgba(12, 102, 228, 0.06), var(--bg-card));
+  border-color: rgba(12, 102, 228, 0.2);
+}
+
+.notif-type-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  width: 36px;
+  text-align: center;
+}
+
+.notif-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-title {
+  color: var(--text-primary);
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.notif-message {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 4px 0 0;
+}
+
+.notif-time {
+  color: var(--text-muted);
+  display: block;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.notif-actions {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.unread-dot {
+  background: var(--primary);
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
+  box-shadow: 0 0 0 3px rgba(12, 102, 228, 0.2);
+}
+
+.icon-action {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.icon-action:hover {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+.empty-state {
+  align-items: center;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  margin: 42px auto 0;
+  max-width: 420px;
+  padding: 42px;
+  text-align: center;
+}
+
+.empty-state h2 {
+  font-size: 20px;
+  margin: 0 0 6px;
+}
+
+.empty-state p {
+  color: var(--text-muted);
+  margin: 0;
+}

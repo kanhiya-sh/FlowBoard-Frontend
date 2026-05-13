@@ -1,0 +1,88 @@
+<section class="page">
+  <header class="page-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Overview of your workspaces, teams, and assigned tasks.</p>
+    </div>
+    <button class="primary" type="button" (click)="modalOpen = true">Create Workspace</button>
+  </header>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid" *ngIf="!loading()">
+    <div class="stat-card">
+      <div class="stat-icon workspaces-icon">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats().workspaces }}</span>
+        <span class="stat-label">Workspaces</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon members-icon">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats().members }}</span>
+        <span class="stat-label">Total Members</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon cards-icon">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats().myCards }}</span>
+        <span class="stat-label">My Cards</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon boards-icon">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8v8"/><path d="M12 8v5"/><path d="M17 8v10"/></svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats().boards }}</span>
+        <span class="stat-label">Total Boards</span>
+      </div>
+    </div>
+  </div>
+
+  <app-spinner *ngIf="loading()"></app-spinner>
+
+  <div class="empty-state" *ngIf="!loading() && !workspaces().length">
+    <div class="empty-visual"></div>
+    <h2>No workspaces yet</h2>
+    <p>Create your first workspace and start organizing boards with your team.</p>
+    <button class="primary" type="button" (click)="modalOpen = true">Create Workspace</button>
+  </div>
+
+  <div class="grid" *ngIf="!loading() && workspaces().length">
+    <a class="workspace-card" *ngFor="let workspace of workspaces()" [routerLink]="['/workspace', workspace.workspaceId]">
+      <span class="badge">{{ workspace.visibility }}</span>
+      <h2>{{ workspace.name }}</h2>
+      <p>{{ workspace.description || 'No description yet.' }}</p>
+      <footer>{{ workspace.memberCount || 0 }} members</footer>
+    </a>
+  </div>
+</section>
+
+<div class="modal-backdrop" *ngIf="modalOpen" (click)="modalOpen = false">
+  <section class="modal" (click)="$event.stopPropagation()">
+    <h2>Create workspace</h2>
+    <form [formGroup]="form" (ngSubmit)="create()">
+      <label>Name</label>
+      <input formControlName="name">
+      <label>Description</label>
+      <textarea formControlName="description"></textarea>
+      <label>Visibility</label>
+      <select formControlName="visibility">
+        <option value="PRIVATE">Private</option>
+        <option value="PUBLIC">Public</option>
+      </select>
+      <div class="modal-actions">
+        <button type="button" (click)="modalOpen = false">Cancel</button>
+        <button class="primary" type="submit">Create</button>
+      </div>
+    </form>
+  </section>
+</div>

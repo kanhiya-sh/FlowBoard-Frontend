@@ -1,0 +1,35 @@
+<main class="auth-page">
+  <section class="auth-card wide">
+    <div class="brand">FlowBoard</div>
+    <h1>Create account</h1>
+    <p>Start collaborating with boards, lists, and cards.</p>
+
+    <button class="google-button" type="button" (click)="continueWithGoogle()">
+      <span class="google-icon" aria-hidden="true">G</span>
+      <span>Continue with Google</span>
+    </button>
+
+    <div class="auth-divider"><span>or</span></div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label>Full name</label>
+      <input formControlName="fullName" autocomplete="name">
+      <label>Email</label>
+      <input type="email" formControlName="email" autocomplete="email">
+      <label>Username</label>
+      <input formControlName="username" autocomplete="username">
+      <label>Password</label>
+      <input type="password" formControlName="password" autocomplete="new-password">
+      <label>Confirm password</label>
+      <input type="password" formControlName="confirmPassword" autocomplete="new-password">
+      <small *ngIf="form.touched && form.hasError('mismatch')">Passwords must match.</small>
+      <div class="error" *ngIf="error">{{ error }}</div>
+
+      <button class="primary" type="submit" [disabled]="loading">
+        <app-spinner *ngIf="loading" label="Creating"></app-spinner>
+        <span *ngIf="!loading">Register</span>
+      </button>
+    </form>
+    <a routerLink="/login">Already have an account?</a>
+  </section>
+</main>

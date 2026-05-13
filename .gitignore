@@ -1,0 +1,50 @@
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Angular cache
+.angular/cache
+
+# Misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment files (secrets nahi jaane chahiye GitHub pe)
+src/environments/environment.prod.ts
+
+# ng serve logs (ye sirf local development ke liye hain)
+ng-serve*.log
+ng-serve*.err.log
+
+# Sonar
+.scannerwork/

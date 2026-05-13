@@ -1,0 +1,29 @@
+<section class="page profile">
+  <header class="page-header">
+    <div>
+      <h1>Profile</h1>
+      <p>Keep your FlowBoard identity current.</p>
+    </div>
+  </header>
+
+  <div class="profile-grid" *ngIf="user()">
+    <section class="panel">
+      <h2>Account</h2>
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+        <label>Full name</label><input formControlName="fullName">
+        <label>Username</label><input formControlName="username">
+        <label>Avatar URL</label><input formControlName="avatarUrl">
+        <button class="primary" type="submit">Save Profile</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Password</h2>
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <label>Current password</label><input type="password" formControlName="currentPassword">
+        <label>New password</label><input type="password" formControlName="newPassword">
+        <button class="primary" type="submit">Change Password</button>
+      </form>
+    </section>
+  </div>
+</section>

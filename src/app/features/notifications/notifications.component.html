@@ -1,0 +1,35 @@
+<section class="page">
+  <header class="page-header">
+    <div>
+      <h1>Notifications</h1>
+      <p>Stay updated with activity across your workspaces.</p>
+    </div>
+    <button class="primary" type="button" (click)="markAllRead()" *ngIf="unreadCount() > 0">
+      Mark All Read ({{ unreadCount() }})
+    </button>
+  </header>
+
+  <app-spinner *ngIf="loading()"></app-spinner>
+
+  <div class="empty-state" *ngIf="!loading() && !notifications().length">
+    <h2>No notifications</h2>
+    <p>You're all caught up!</p>
+  </div>
+
+  <div class="notif-list" *ngIf="!loading() && notifications().length">
+    <article class="notif-item" *ngFor="let n of notifications()" [class.unread]="!n.isRead" (click)="markRead(n)">
+      <span class="notif-type-icon">{{ typeIcon(n.type) }}</span>
+      <div class="notif-body">
+        <strong class="notif-title">{{ n.title || n.type }}</strong>
+        <p class="notif-message">{{ n.message }}</p>
+        <time class="notif-time">{{ n.createdAt | date:'medium' }}</time>
+      </div>
+      <div class="notif-actions">
+        <span class="unread-dot" *ngIf="!n.isRead"></span>
+        <button class="icon-action" type="button" (click)="deleteNotif(n); $event.stopPropagation()" title="Delete">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+      </div>
+    </article>
+  </div>
+</section>

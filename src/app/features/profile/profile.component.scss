@@ -1,0 +1,36 @@
+@use '../../shared/page-styles';
+
+.profile-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+}
+
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 24px;
+  transition: box-shadow var(--transition-fast);
+}
+
+.panel:hover { box-shadow: var(--shadow-md); }
+
+.panel h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel form {
+  display: grid;
+  gap: 14px;
+}
+
+.panel .primary {
+  margin-top: 8px;
+  justify-self: start;
+}

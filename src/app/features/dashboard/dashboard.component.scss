@@ -1,0 +1,210 @@
+@use '../../shared/page-styles';
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  align-items: center;
+  background: linear-gradient(180deg, var(--bg-glass), var(--bg-card));
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  gap: 16px;
+  padding: 20px 22px;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-icon {
+  align-items: center;
+  border-radius: 12px;
+  display: flex;
+  height: 44px;
+  justify-content: center;
+  width: 44px;
+}
+
+.stat-icon.workspaces-icon {
+  background: linear-gradient(135deg, rgba(12, 102, 228, 0.15), rgba(12, 102, 228, 0.08));
+  color: var(--primary);
+}
+
+.stat-icon.members-icon {
+  background: linear-gradient(135deg, rgba(110, 93, 198, 0.15), rgba(110, 93, 198, 0.08));
+  color: #6e5dc6;
+}
+
+.stat-icon.cards-icon {
+  background: linear-gradient(135deg, rgba(0, 180, 140, 0.15), rgba(0, 180, 140, 0.08));
+  color: var(--teal);
+}
+
+.stat-icon.boards-icon {
+  background: linear-gradient(135deg, rgba(255, 145, 0, 0.15), rgba(255, 145, 0, 0.08));
+  color: #ff9100;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-value {
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.stat-label {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.grid {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.workspace-card {
+  animation: slideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+  background: linear-gradient(180deg, var(--bg-glass), var(--bg-card));
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  min-height: 180px;
+  padding: 24px;
+  text-decoration: none;
+  text-align: left;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.workspace-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent), var(--teal));
+  opacity: 0.9;
+  transition: opacity var(--transition-fast);
+}
+
+.workspace-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-5px);
+  border-color: transparent;
+}
+
+.workspace-card:hover::before { opacity: 1; }
+
+.workspace-card .badge {
+  align-self: flex-start;
+}
+
+.workspace-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin: 16px 0 8px;
+}
+
+.workspace-card p {
+  color: var(--text-muted);
+  font-size: 13px;
+  flex: 1;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.workspace-card footer {
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 16px;
+  padding-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.empty-state {
+  align-items: center;
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  margin: 42px auto 0;
+  max-width: 520px;
+  padding: 42px;
+  text-align: center;
+}
+
+.empty-visual {
+  background:
+    linear-gradient(135deg, rgba(12, 102, 228, 0.95), rgba(110, 93, 198, 0.9));
+  border-radius: 20px;
+  box-shadow: 0 18px 38px rgba(12, 102, 228, 0.24);
+  height: 92px;
+  margin-bottom: 20px;
+  position: relative;
+  width: 120px;
+}
+
+.empty-visual::before,
+.empty-visual::after {
+  background: rgba(255, 255, 255, 0.78);
+  border-radius: 9px;
+  content: '';
+  height: 18px;
+  left: 18px;
+  position: absolute;
+  right: 18px;
+}
+
+.empty-visual::before { top: 22px; }
+.empty-visual::after { bottom: 22px; width: 54px; }
+
+.empty-state h2 {
+  font-size: 22px;
+  margin: 0 0 6px;
+}
+
+.empty-state p {
+  color: var(--text-muted);
+  margin: 0 0 22px;
+}
+
+@for $i from 1 through 12 {
+  .workspace-card:nth-child(#{$i}) {
+    animation-delay: #{$i * 0.04}s;
+  }
+}
